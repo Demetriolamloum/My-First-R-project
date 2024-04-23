@@ -1,0 +1,81 @@
+---
+title: "Second wave of Covid-19 in Switzerland"
+author: "Demetrio"
+date: today
+format: 
+  html:
+    toc: true
+    toc-location: body
+    code-fold: show
+    code-tools: true
+    df-print: paged
+    embed-resource: true
+  pdf:
+    toc: true
+  docx: 
+    toc: true
+    
+---
+```{r}
+#install.packages("unibeCols")
+```
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+#| output: flase
+#| # Load libraries
+library(here)
+library(tidyverse)
+library(lubridate)
+library(unibeCols)
+```
+## Introuction
+
+The aim of this exercise is to visualize the increase in laboratory-confirmed cases of COVID-19 in Switzerland during autumn 2020
+
+## Data
+
+We read and process the data of laboratory-confirmed cases og Covid-19 in Switzerland as reported by [Federal OFfice of Public HEalth (http://https://idd.bag.admin.ch/)]
+
+```{r}
+#| output: false
+# Read data
+cases <- read_csv(here("data/raw/COVID19Cases_geoRegion.csv"))
+```
+
+```{r}
+#Process data 
+region <- "CH"
+window_start <- ymd("2020-09-01")
+window_end <- ymd("2020-11-30")
+cases <- cases |>
+  filter(geoRegion == region & datum >= window_start & datum <= window_end) |>
+  select(datum, entries)
+cases 
+```
+
+@fig-cases shows the number of lavorairy.confirmed cases of COVID-19 in Switzerland from `r` window_start` to `r window_end`.
+
+```{r}
+#| label: fig-cases
+#| fig-cap: "Laboratory-confirmed cases of COVID-19 in Switzerland in 2020."
+#| fig-width: 8
+#| fig-height: 4
+ggplot(cases, aes(x = datum, y = entries)) +
+  geom_bar(stat = "identity", fill = unibeSaphire()) + 
+  labs(x = "", 
+       y = "Laboratory-confirmed cases") + 
+  theme_minimal()
+```
+
+
+##Conclusions
+
+The number of laboratory-confirmed cases
+
